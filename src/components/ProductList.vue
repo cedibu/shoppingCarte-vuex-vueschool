@@ -33,19 +33,15 @@
         products: state => state.products.items
       }),
 
-      ...mapGetters({
+      ...mapGetters('products', {
         productIsInStock: 'productIsInStock'
       })
     },
     methods: {
       ...mapActions({
-        fetchProducts: 'fetchProducts',
-        addProductToCart: 'addProductToCart'
-      }),
-
-      addProductToCart (product) {
-        this.$store.dispatch('addProductToCart', product)
-      }
+        fetchProducts: 'products/fetchProducts',
+        addProductToCart: 'cart/addProductToCart'
+      })
     },
     created () {
       this.loading = true

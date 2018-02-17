@@ -14,20 +14,21 @@
 
 <script>
   import { mapState, mapGetters, mapActions } from 'vuex'
+
   export default {
     computed: {
-      ...mapGetters({
+      ...mapGetters('cart', {
         products: 'cartProducts',
-        total: 'cartTotal'
+        total: '  cartTotal'
       }),
 
-      ...mapState({
-        checkoutStatut: state => state.cart.checkoutStatut
+      ...mapState('cart', {
+        checkoutStatut: state => state.checkoutStatut
       })
     },
 
     methods: {
-      ...mapActions(['checkout'])
+      ...mapActions('cart', ['checkout'])
     }
   }
 </script>
