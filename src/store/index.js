@@ -1,6 +1,7 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
 import shop from '@/api/shop'
+import actions from './actions'
 
 Vue.use(Vuex)
 
@@ -35,48 +36,16 @@ export default new Vuex.Store({
       // })
       // return total
       return getters.cartProducts.reduce((total, product) => total + product.price * product.quantity, 0)
-    }
-  },
-
-  // - L'action décide quand une mutation doit se déclencher
-  // - L'action peut être complex mais n'altère pas le state
-  actions: { // = methods
-    fetchProducts ({commit}) { //destructuring de "context" afin de récupérer juste "commit" et pouvoir appeler commit('...') plus bas au lieu de context.commit
-      return new Promise((resolve, reject) => {
-        //make the call
-        // run setProducts mutation
-        shop.getProducts(products => {
-          commit('setProducts', products)
-          resolve()
-        })
-      })
     },
 
-    addProductToCart (context, product) {
-      if (product.inventory > 0) {
-        const cartItem = context.state.cart.find(item => item.id === product.id)
-        if (!cartItem) {
-          context.commit('pushProductToCart', product.id)
-        } else {
-          context.commit('incrementItemQuantity', cartItem)
-        }
-        context.commit('decrementProductInventory', product)
+    productIsInStock () {
+      return (product) => {
+        return product.inventory > 0
       }
-    },
-
-    checkout ({state, commit}) {
-      shop.buyProducts(
-        state.cart,
-        () => {
-          commit('emptyCart')
-          commit('setCheckoutStatus', 'success')
-        },
-        () => {
-          commit('setCheckoutStatus', 'fail')
-        }
-      )
     }
   },
+
+   actions,
 
   //Les mutations sont responsables des changements du state et doivent être simple
   mutations: {
